@@ -3,6 +3,12 @@
 AABB::AABB()
 {
     updated = false;
+    minP.x = 0.0;
+    minP.y = 0.0;
+    minP.z = 0.0;
+    maxP.x = 0.0;
+    maxP.y = 0.0;
+    maxP.z = 0.0;
 }
 AABB::AABB(float minX,float minY,float minZ,float maxX,float maxY,float maxZ)
 {
@@ -61,9 +67,9 @@ PointXYZ AABB::getPosition(const float& viewX,const float& viewY,const float& vi
                             maxP.z-minP.z);
     Eigen::Vector3f camerVec(viewX,viewY,viewZ);
     Eigen::Vector3f vec = aabbVec.dot(camerVec) * camerVec;
-
+    PointXYZ midPnt =  getMidPnt();
     float digLen = sqrt(aabbVec.squaredNorm() -  vec.squaredNorm());
-    Eigen::Vector3f camera2Minp = digLen * vec * scalar;
+    Eigen::Vector3f camera2Minp = digLen * camerVec * scalar;
 
-    return PointXYZ(minP.x-camera2Minp.x(),minP.y-camera2Minp.y(),minP.z-camera2Minp.z());
+    return PointXYZ(midPnt.x-camera2Minp.x(),midPnt.y-camera2Minp.y(),midPnt.z-camera2Minp.z());
 }

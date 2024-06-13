@@ -793,27 +793,51 @@ void Viewer::mainview() {
         if(this->mycloud_vec[i].visible==false) continue;
         aabb.update(mycloud_vec[i].cloudAABB);
     }
-    aabb.printAABB();
-    viewer->setCameraPosition(0, -1, 0, 0.5, 0.5, 0.5, 0, 0, 1);
-    if(aabb.isUpdated())
-    {
-        PointXYZ camerPos = aabb.getPosition(0,-1,0,1);
-        viewer->setCameraPosition(camerPos.x,camerPos.y, camerPos.z,
-                                  0, 0, 1);
-        qDebug()<< camerPos.x << " "<< camerPos.y << " "<<camerPos.z;
 
-    }
+    PointXYZ camerPos = aabb.getPosition(0,0,-1,2);
+    PointXYZ midPnt = aabb.getMidPnt();
+    viewer->setCameraPosition(camerPos.x,camerPos.y, camerPos.z,
+                            midPnt.x,midPnt.y,midPnt.z,
+                            0,1,0);
+    qDebug() << "mainView";
+    qDebug()<< camerPos.x << " "<< camerPos.y << " "<<camerPos.z;
+    qDebug() << midPnt.x << " " << midPnt.y <<" " << midPnt.z;
     UpdateScreen();
 }
 
 void Viewer::leftview() {
-  viewer->setCameraPosition(-1, 0, 0, 0, 0, 0, 0, 0, 1);
-  UpdateScreen();
+    AABB aabb;
+    for(int i = 0;i<this->mycloud_vec.size();i++)
+    {
+        if(this->mycloud_vec[i].visible==false) continue;
+        aabb.update(mycloud_vec[i].cloudAABB);
+    }
+
+    PointXYZ camerPos = aabb.getPosition(1,0,0,2);
+    PointXYZ midPnt = aabb.getMidPnt();
+    viewer->setCameraPosition(camerPos.x,camerPos.y, camerPos.z,
+                              midPnt.x,midPnt.y,midPnt.z,
+                              0, 1, 0);
+
+    UpdateScreen();
 }
 
 void Viewer::topview() {
-  viewer->setCameraPosition(0, 0, 1, 0, 0, 0, 0, 1, 0);
-  UpdateScreen();
+    AABB aabb;
+    for(int i = 0;i<this->mycloud_vec.size();i++)
+    {
+        if(this->mycloud_vec[i].visible==false) continue;
+        aabb.update(mycloud_vec[i].cloudAABB);
+    }
+
+    PointXYZ camerPos = aabb.getPosition(0,-1,0,2);
+    PointXYZ midPnt = aabb.getMidPnt();
+    viewer->setCameraPosition(camerPos.x,camerPos.y, camerPos.z,
+                                midPnt.x,midPnt.y,midPnt.z,
+                                0, 0, -1);
+
+
+    UpdateScreen();
 }
 
 // 设置属性管理窗口

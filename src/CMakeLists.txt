@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(3DViewer)
+project(ModelViewer)
 
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
