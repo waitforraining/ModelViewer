@@ -48,7 +48,7 @@
 #include <algorithm>
 #include <map>
 #include <vector>
-
+#include <limits>
 #include "about_win.h"
 #include "custom_tree_widget.h"
 #include "data.h"
@@ -58,6 +58,8 @@
 #include "mesh_processing.h"
 #include "tools.h"
 #include "ui_viewer.h"
+#include "function.h"
+#include "aabb.h"
 
 typedef pcl::PointXYZRGBA PointT;
 typedef pcl::PointCloud<PointT> PointCloudT;
@@ -80,127 +82,127 @@ class Viewer : public QMainWindow {
   Q_OBJECT
 
  public:
-  Viewer(QWidget* parent = 0);
+    Viewer(QWidget* parent = 0);
 
-  ~Viewer();
+    ~Viewer();
 
  protected:
-  void dragEnterEvent(QDragEnterEvent* event) override;
-  void dropEvent(QDropEvent* event) override;
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
 
  private:
-  Ui::Viewer ui;
+    Ui::Viewer ui;
 
-  pcl::PointCloud<pcl::PointXYZ>::Ptr xyzCloud;
-  Data mycloud;
-  std::vector<Data> mycloud_vec;
-  std::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr xyzCloud;
+    Data mycloud;
+    std::vector<Data> mycloud_vec;
+    std::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
 
-  FileIO fileIO;
+    FileIO fileIO;
 
-  QString save_filename;
-  long total_points = 0;  // Total amount of points in the viewer
+    QString save_filename;
+    long total_points = 0;  // Total amount of points in the viewer
 
-  unsigned int red = 255;
-  unsigned int green = 255;
-  unsigned int blue = 255;
-  unsigned int p = 2;
-  std::vector<int> pointcolor;
-  std::vector<int> bgcolor;
+    unsigned int red = 255;
+    unsigned int green = 255;
+    unsigned int blue = 255;
+    unsigned int p = 2;
+    std::vector<int> pointcolor;
+    std::vector<int> bgcolor;
 
-  QVBoxLayout* layout;
+    QVBoxLayout* layout;
 
-  int theme_id = 1;              // 0: Windows theme, 1: Darcula theme
-  bool enable_console = true;    // console 的可用状态
-  QString timeCostSecond = "0";  // 记录某个动作执行的时间
-  vector<std::string> display_cloudId;
-  vtkSmartPointer<vtkWindowToImageFilter> window_to_image_filter;
-  /***** Slots of QMenuBar and QToolBar *****/
-  // File menu slots
-  void open();
-  void add();
-  void doOpen(const QStringList& filePathList);
-  void clear();
+    int theme_id = 1;              // 0: Windows theme, 1: Darcula theme
+    bool enable_console = true;    // console 的可用状态
+    QString timeCostSecond = "0";  // 记录某个动作执行的时间
+    vector<std::string> display_cloudId;
+    vtkSmartPointer<vtkWindowToImageFilter> window_to_image_filter;
+    /***** Slots of QMenuBar and QToolBar *****/
+    // File menu slots
+    void open();
+    void add();
+    void doOpen(const QStringList& filePathList);
+    void clear();
 
-  void savemulti(const QFileInfo& fileInfo, bool isSaveBinary);
-  void exit();
-  // Display menu slots
-  void pointcolorChanged();
-  void bgcolorChanged();
-  void mainview();
-  void leftview();
-  void topview();
-  // Generate menu slots
-  void cube();
-  void createSphere();
-  void createCylinder();
-  // Process menu slots
-  int convertSurface();    //法线估计、曲面重建、网格面片显示
-  int convertWireframe();  //法线估计、曲面重建、网格线框显示
+    void savemulti(const QFileInfo& fileInfo, bool isSaveBinary);
+    void exit();
+    // Display menu slots
+    void pointcolorChanged();
+    void bgcolorChanged();
+    void mainview();
+    void leftview();
+    void topview();
+    // Generate menu slots
+    void cube();
+    void createSphere();
+    void createCylinder();
+    // Process menu slots
+    int convertSurface();    //法线估计、曲面重建、网格面片显示
+    int convertWireframe();  //法线估计、曲面重建、网格线框显示
 
-  // About menu slots
-  void about();
-  void help();
+    // About menu slots
+    void about();
+    void help();
 
-  /***** Utils Methods ***/
-  void initial();
-  void ShowModel();                  //显示点云
-  void AddModel(int view_port = 0);  //添加给viewer，显示点云
-  void CaptureModel(int viwe_port = 0);
-  int JudgeRender(int x, int y, int index);
-  void setCloudColor(unsigned int r, unsigned int g, unsigned int b);
-  void HighLightTreeItemText(QTreeWidgetItem* item);
-  void LowLightTreeItemText(QTreeWidgetItem* item);
+    /***** Utils Methods ***/
+    void initial();
+    void ShowModel();                  //显示点云
+    void AddModel(int view_port = 0);  //添加给viewer，显示点云
+    void CaptureModel(int viwe_port = 0);
+    int JudgeRender(int x, int y, int index);
+    void setCloudColor(unsigned int r, unsigned int g, unsigned int b);
+    void HighLightTreeItemText(QTreeWidgetItem* item);
+    void LowLightTreeItemText(QTreeWidgetItem* item);
 
-  void setPropertyTable();
+    void setPropertyTable();
 
-  void setConsoleTable();
+    void setConsoleTable();
 
-  void consoleLog(QString operation,
+    void consoleLog(QString operation,
                   QString subname,
                   QString filename,
                   QString note);
 
- public slots:
-  void save();
-  void ChangeTheme();
-  void ChangeLanguage();
+public slots:
+    void save();
+    void ChangeTheme();
+    void ChangeLanguage();
 
-  // void colorBtnPressed();
-  // void RGBsliderReleased();
-  void PointSizeSliderReleased();
-  void PointSizeSliderChanged(int value);
-  // void rSliderChanged(int value);
-  // void gSliderChanged(int value);
-  // void bSliderChanged(int value);
-  // Slots of checkBox
-  void RenderNumChanged(int index);
+    // void colorBtnPressed();
+    // void RGBsliderReleased();
+    void PointSizeSliderReleased();
+    void PointSizeSliderChanged(int value);
+    // void rSliderChanged(int value);
+    // void gSliderChanged(int value);
+    // void bSliderChanged(int value);
+    // Slots of checkBox
+    void RenderNumChanged(int index);
 
-  void CooCbxChecked(int value);
-  void BgcCbxChecked(int value);
+    void CooCbxChecked(int value);
+    void BgcCbxChecked(int value);
 
-  /***** Slots of dataTree(QTreeWidget) widget *****/
-  // Item in dataTree is left-clicked
-  void itemSelected(QTreeWidgetItem*, int);
-  // Item in dataTree is right-clicked
-  void popMenu(const QPoint&);
+    /***** Slots of dataTree(QTreeWidget) widget *****/
+    // Item in dataTree is left-clicked
+    void itemSelected(QTreeWidgetItem*, int);
+    // Item in dataTree is right-clicked
+    void popMenu(const QPoint&);
 
-  void TreeItemChanged(QTreeWidgetItem*, int);
-  void hideItem();
-  void showItem();
-  void deleteItem();
+    void TreeItemChanged(QTreeWidgetItem*, int);
+    void hideItem();
+    void showItem();
+    void deleteItem();
 
-  // set show mode
-  void setRenderingMode();
+    // set show mode
+    void setRenderingMode();
 
-  void popMenuInConsole(const QPoint&);
+    void popMenuInConsole(const QPoint&);
 
-  void clearConsole();
-  void enableConsole();
-  void disableConsole();
+    void clearConsole();
+    void enableConsole();
+    void disableConsole();
 
-  void debug(const string& s);
-  void UpdateScreen();
+    void debug(const string& s);
+    void UpdateScreen();
 };
 
 #endif  // VIEWER_H

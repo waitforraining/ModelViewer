@@ -5,11 +5,14 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/features/moment_of_inertia_estimation.h>
 
+#include <QDebug>
 #include <QFileInfo>
 #include <string>
 
 #include "tools.h"
+#include "aabb.h"
 
 using namespace std;
 
@@ -23,8 +26,12 @@ class Data {
 
   bool isValid = false;
 
+
   PointCloudT::Ptr cloud;      // point cloud pointer
   pcl::PolygonMesh::Ptr mesh;  // polygon mesh pointer
+  pcl::MomentOfInertiaEstimation<PointT> featureExtractor;
+
+  AABB cloudAABB;
 
   string filePath;    // dir + file name   e.g. /home/user/hello.min.ply
   string fileDir;     // only dir          e.g. /home/user

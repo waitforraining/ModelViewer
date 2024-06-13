@@ -32,7 +32,10 @@ add_executable(${PROJECT_NAME}
         ${DIR_SRCS}
         ${DIR_HEADERS}
         ${DIR_UIS}
-        ${RESOURCE_ADDED})
+        ${RESOURCE_ADDED}
+        function.h
+        function.cpp
+        aabb.h aabb.cpp)
 
 target_link_libraries(${PROJECT_NAME}
         ${PCL_LIBRARIES}

@@ -784,11 +784,26 @@ void Viewer::bgcolorChanged() {
     ShowModel();
   }
 }
-
-//三视图
+ //三视图
 void Viewer::mainview() {
-  viewer->setCameraPosition(0, -1, 0, 0.5, 0.5, 0.5, 0, 0, 1);
-  UpdateScreen();
+
+    AABB aabb;
+    for(int i = 0;i<this->mycloud_vec.size();i++)
+    {
+        if(this->mycloud_vec[i].visible==false) continue;
+        aabb.update(mycloud_vec[i].cloudAABB);
+    }
+    aabb.printAABB();
+    viewer->setCameraPosition(0, -1, 0, 0.5, 0.5, 0.5, 0, 0, 1);
+    if(aabb.isUpdated())
+    {
+        PointXYZ camerPos = aabb.getPosition(0,-1,0,1);
+        viewer->setCameraPosition(camerPos.x,camerPos.y, camerPos.z,
+                                  0, 0, 1);
+        qDebug()<< camerPos.x << " "<< camerPos.y << " "<<camerPos.z;
+
+    }
+    UpdateScreen();
 }
 
 void Viewer::leftview() {
