@@ -24,6 +24,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkWindowToImageFilter.h>
 
+
 #include <QAction>
 #include <QColorDialog>
 #include <QDebug>

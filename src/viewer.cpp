@@ -2,8 +2,7 @@
 #include "glog/logging.h"
 
 Viewer::Viewer(QWidget* parent) : QMainWindow(parent) {
-  ui.setupUi(this);
-
+    ui.setupUi(this);
   /***** Slots connection of QMenuBar and QToolBar *****/
   // File (connect)
   QObject::connect(ui.openAction, &QAction::triggered, this, &Viewer::open);
@@ -416,13 +415,17 @@ void Viewer::initial() {
   //	viewer.reset(new pcl::visualization::PCLVisualizer("viewer", false));
   auto renderer = vtkSmartPointer<vtkRenderer>::New();
   auto _renderWindow = vtkSmartPointer<vtkGenericOpenGLRenderWindow>::New();
+  renderer->GradientBackgroundOn();
+  renderer->SetBackground(1.0,1.0,1.0);
+  renderer->SetBackground2(0.529,0.8078,0.92157);
+
   _renderWindow->AddRenderer(renderer);
   viewer.reset(new pcl::visualization::PCLVisualizer(renderer, _renderWindow,
                                                      "viewer", false));
   // viewer->addPointCloud(cloud, "cloud");
   ui.screen->setRenderWindow(viewer->getRenderWindow());
-  viewer->setupInteractor(ui.screen->GetInteractor(),
-                          ui.screen->GetRenderWindow());
+  viewer->setupInteractor(ui.screen->interactor(),
+                          ui.screen->renderWindow());
   UpdateScreen();
 
   ui.propertyTable->setSelectionMode(
@@ -443,12 +446,13 @@ void Viewer::initial() {
   consoleLog("Software start", "viewer", "Welcome to use viewer", "faultaddr");
 
   // 设置背景颜色为 dark
-  viewer->setBackgroundColor(30 / 255.0, 30 / 255.0, 30 / 255.0);
+  //viewer->setBackgroundColor(30 / 255.0, 30 / 255.0, 30 / 255.0);
   window_to_image_filter = vtkSmartPointer<vtkWindowToImageFilter>::New();
   window_to_image_filter->SetInput(ui.screen->renderWindow());
   ui.screen->setAcceptDrops(true);
   connect(ui.screen, SIGNAL(mouseEvent(QMouseEvent*)), this,
           SLOT(ReleaseMouseOnScreen(QMouseEvent*)));
+
 }
 
 //显示点云
