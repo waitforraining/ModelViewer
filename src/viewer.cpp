@@ -911,8 +911,7 @@ void Viewer::consoleLog(QString operation,
 
 // QTreeWidget的item的点击相应函数
 void Viewer::itemSelected(QTreeWidgetItem* item, int count) {
-  count = ui.dataTree->indexOfTopLevelItem(item);  //获取item的行号
-
+    count = ui.dataTree->indexOfTopLevelItem(item);  //获取item的行号
   for (int i = 0; i != mycloud_vec.size(); i++) {
     if (mycloud_vec[i].visible) {
       viewer->updatePointCloud(mycloud_vec[i].cloud, mycloud_vec[i].cloudId);
@@ -1099,6 +1098,8 @@ void Viewer::TreeItemChanged(QTreeWidgetItem* item, int index) {
     mycloud_vec[index].visible = false;
     LowLightTreeItemText(item);
   }
+  qDebug() << "-------------";
+  qDebug() << item->checkState(0) << " " << item->text(0);
   ShowModel();
 }
 
@@ -1126,6 +1127,7 @@ void Viewer::hideItem() {
     QTreeWidgetItem* item = itemList[i];
     QString name = item->text(0);
     int id = ui.dataTree->indexOfTopLevelItem(item);
+
     mycloud_vec[id].hide();
 
     // QMessageBox::information(this, "cloud_id",

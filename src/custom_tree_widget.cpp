@@ -102,11 +102,11 @@ void CustomTreeWidget::dragLeaveEvent(QDragLeaveEvent* event) {
   }
 }
 
-void CustomTreeWidget::mouseReleaseEvent(QMouseEvent* event) {
-  is_pressed = false;
-  QTreeWidget::mouseReleaseEvent(event);
-  qDebug() << "-------mouseReleaseEvent---------------";
-}
+// void CustomTreeWidget::mouseReleaseEvent(QMouseEvent* event) {
+//   is_pressed = false;
+//   //QTreeWidget::mouseReleaseEvent(event);
+//   //qDebug() << "-------mouseReleaseEvent---------------";
+// }
 
 // void DragTreeWidget::mouseMoveEvent(QMouseEvent *event)
 //{
@@ -136,70 +136,71 @@ QList<QString> CustomTreeWidget::getSelectedItemsText() {
   return listItemText;
 }
 
-void CustomTreeWidget::mousePressEvent(QMouseEvent* event) {
-  is_pressed = true;
-  index_list_ = this->selectedIndexes();
-  QTreeWidget::mousePressEvent(event);
-  QList<QString> listText = getSelectedItemsText();
-  if (listText.count() == 0) {
-    return;
-  }
+// void CustomTreeWidget::mousePressEvent(QMouseEvent* event) {
+//   is_pressed = true;
+//   index_list_ = this->selectedIndexes();
+//   QTreeWidget::mousePressEvent(event);
 
-  QImage image(30, 10, QImage::Format_ARGB32);
-  image.fill(QColor(47, 168, 236, 150));
-  QPixmap pixmap = QPixmap::fromImage(image);
-  // pixmap.load(Global::GetImagePath() + "hover.png");
+//   QList<QString> listText = getSelectedItemsText();
+//   if (listText.count() == 0) {
+//     return;
+//   }
 
-  //  dataStream << pixmap
-  //             << QPoint(event->pos() /*- child->pos()*/ +
-  //                       QPoint(pixmap.width() / 2, pixmap.height() / 2));
-  std::string res;
-  for (auto model_index : this->selectedIndexes()) {
-    LOG(INFO) << model_index.row();
-    res.append(std::to_string(model_index.row()) + "-");
-  }
-  QMimeData* mimeData = new QMimeData;
-  QString q_str = QString::fromStdString(res);
-  mimeData->setText(q_str);
+//   QImage image(30, 10, QImage::Format_ARGB32);
+//   image.fill(QColor(47, 168, 236, 150));
+//   QPixmap pixmap = QPixmap::fromImage(image);
+//   // pixmap.load(Global::GetImagePath() + "hover.png");
 
-  QPixmap tempPixmap = pixmap;
-  QPainter painter;
-  painter.begin(&tempPixmap);
-  // painter.fillRect(pixmap.rect(), QColor(47, 168, 236, 150));
-  if (m_bNewTreeState) {
-    QFont font = painter.font();
-    font.setPixelSize(16);
-    painter.setFont(font);
-    QPen pen = painter.pen();
-    pen.setStyle(Qt::DotLine);
-    pen.setColor(QColor("#2FEC2F"));
-    painter.setPen(pen);
+//   //  dataStream << pixmap
+//   //             << QPoint(event->pos() /*- child->pos()*/ +
+//   //                       QPoint(pixmap.width() / 2, pixmap.height() / 2));
+//   std::string res;
+//   for (auto model_index : this->selectedIndexes()) {
+//     LOG(INFO) << model_index.row();
+//     res.append(std::to_string(model_index.row()) + "-");
+//   }
+//   QMimeData* mimeData = new QMimeData;
+//   QString q_str = QString::fromStdString(res);
+//   mimeData->setText(q_str);
 
-    for (int i = 0; i < listText.size(); i++) {
-      const QRect rectangle = QRect(10, 10 + 40 * i, pixmap.width() - 10, 50);
-      QRect boundingRect;
-      painter.drawText(rectangle, 0, listText.at(i), &boundingRect);
-    }
-    auto index_list = this->selectedIndexes();
-    for (auto& index : index_list) {
-    }
-  }
-  painter.end();
+//   QPixmap tempPixmap = pixmap;
+//   QPainter painter;
+//   painter.begin(&tempPixmap);
+//   // painter.fillRect(pixmap.rect(), QColor(47, 168, 236, 150));
+//   if (m_bNewTreeState) {
+//     QFont font = painter.font();
+//     font.setPixelSize(16);
+//     painter.setFont(font);
+//     QPen pen = painter.pen();
+//     pen.setStyle(Qt::DotLine);
+//     pen.setColor(QColor("#2FEC2F"));
+//     painter.setPen(pen);
 
-  QDrag* drag = new QDrag(this);
-  drag->setMimeData(mimeData);
-  drag->setPixmap(tempPixmap);
-  drag->setHotSpot(/*mapToGlobal(event->pos())*/ QPoint(pixmap.width() / 2,
-                                                        pixmap.height() / 2));
+//     for (int i = 0; i < listText.size(); i++) {
+//       const QRect rectangle = QRect(10, 10 + 40 * i, pixmap.width() - 10, 50);
+//       QRect boundingRect;
+//       painter.drawText(rectangle, 0, listText.at(i), &boundingRect);
+//     }
+//     auto index_list = this->selectedIndexes();
+//     for (auto& index : index_list) {
+//     }
+//   }
+//   painter.end();
 
-  if (drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) ==
-      Qt::MoveAction) {
-    //        child->close();
-  } else {
-    //        child->show();
-    //        child->setPixmap(pixmap);
-  }
-}
+//   QDrag* drag = new QDrag(this);
+//   drag->setMimeData(mimeData);
+//   drag->setPixmap(tempPixmap);
+//   drag->setHotSpot(/*mapToGlobal(event->pos())*/ QPoint(pixmap.width() / 2,
+//                                                         pixmap.height() / 2));
+
+//   if (drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) ==
+//       Qt::MoveAction) {
+//     //        child->close();
+//   } else {
+//     //        child->show();
+//     //        child->setPixmap(pixmap);
+//   }
+// }
 bool CustomTreeWidget::IsMousePressedFromDataTree() {
   return is_pressed;
 }

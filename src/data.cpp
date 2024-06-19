@@ -41,8 +41,7 @@ void Data::init(const QFileInfo& fileInfo,
     this->featureExtractor.setInputCloud(this->cloud);
     this->featureExtractor.compute();
     this->featureExtractor.getAABB(minPoint,maxPoint);
-    qDebug() << minPoint.x << " " << minPoint.y << " "<<minPoint.z;
-    qDebug() << maxPoint.x << " " << maxPoint.y << " "<<maxPoint.z;
+
 
     cloudAABB = AABB(minPoint.x,minPoint.y,minPoint.z,maxPoint.x,maxPoint.y,maxPoint.z);
   }
