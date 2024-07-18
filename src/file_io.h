@@ -11,6 +11,8 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <lasreader.hpp>
+#include <laswriter.hpp>
 
 #include "data.h"
 
@@ -26,6 +28,7 @@ class FileIO {
   Data loadOBJ(const QFileInfo& fileInfo);
   Data loadSTL(const QFileInfo& fileInfo);
   Data loadVTK(const QFileInfo& fileInfo);
+  Data loadLas(const QFileInfo& fileInfo);
 
   bool save(const Data& myCloud,
             const QFileInfo& fileInfo,

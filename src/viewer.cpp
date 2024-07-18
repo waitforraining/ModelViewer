@@ -468,6 +468,7 @@ void Viewer::ShowModel() {
       my_cloud.hide();
     }
   }
+
   if (changed) {
     viewer->resetCamera();
   }

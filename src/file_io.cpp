@@ -70,6 +70,44 @@ Data FileIO::loadVTK(const QFileInfo& fileInfo) {
   return myCloud;
 }
 
+Data FileIO::loadLas(const QFileInfo& fileInfo)
+{
+    Data myCloud;
+    string filePath = fromQString(fileInfo.filePath());
+    LASreadOpener lasreadopener;
+
+    lasreadopener.set_file_name(filePath.c_str());
+
+    double x,y,z;
+    while(lasreadopener.active())
+    {
+        LASreader* lasreader = lasreadopener.open();
+        if(lasreader==0)
+        {
+            qDebug()<<"ERROR:  could not open lasreader";
+            lasreader->close();
+            delete lasreader;
+            return myCloud;
+        }
+
+        while(lasreader->read_point())
+        {
+            PointT pnt;
+
+            pnt.x = lasreader->point.get_X();
+            pnt.y = lasreader->point.get_Y();
+            pnt.z = lasreader->point.get_Z();
+            myCloud.cloud->push_back(pnt);
+        }
+    }
+
+
+    qDebug() << myCloud.cloud->size();
+    myCloud.init(fileInfo, true, false);
+
+    return myCloud;
+}
+
 Data FileIO::load(const QFileInfo& fileInfo) {
   string suffix = fromQString(fileInfo.suffix().toLower());
   if (suffix == "ply") {
@@ -82,6 +120,8 @@ Data FileIO::load(const QFileInfo& fileInfo) {
     return loadSTL(fileInfo);
   } else if (suffix == "vtk") {
     return loadVTK(fileInfo);
+  } else if (suffix == "las")  {
+    return loadLas(fileInfo);
   } else {
     return Data::getInvalidMyCloud();
   }
@@ -153,7 +193,8 @@ bool FileIO::save(const Data& myCloud,
     return saveSTL(myCloud, fileInfo, isBinaryFormat);
   } else if (suffix == "vtk") {
     return saveVTK(myCloud, fileInfo, isBinaryFormat);
-  } else {
+  }
+  else {
     return false;
   }
 }

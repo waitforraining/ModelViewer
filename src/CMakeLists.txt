@@ -7,11 +7,20 @@ if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) # Less useful to do it for linking, see edit2
 endif(CCACHE_FOUND)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# find package
+set(LASlib_DIR "/home/zhang/bycode/local/lib/cmake/LASlib")
+
 find_package(Qt5 REQUIRED Widgets)
 find_package(PCL REQUIRED)
+find_package(LASlib REQUIRED)
+
 add_subdirectory(log)
 include_directories(${PCL_INCLUDE_DIRS})
+include_directories(/home/zhang/bycode/LAStools/LASzip/include/laszip)
+include_directories(${LASlib_INCLUDE_DIRS})
+
+# message(STATUS "CMake Source Directory:" ${PCL_INCLUDE_DIRS})
+# message(STATUS "CMake Source Directory:" ${PCL_DIRS})
+# message(STATUS "CMake Source Directory:" ${PCL_LIBRARY_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
@@ -35,10 +44,12 @@ add_executable(${PROJECT_NAME}
         ${RESOURCE_ADDED}
         function.h
         function.cpp
-        aabb.h aabb.cpp)
-
+        aabb.h aabb.cpp
+    )
+message(STATUS dir=${LASlib_LIBRARIES})
 target_link_libraries(${PROJECT_NAME}
         ${PCL_LIBRARIES}
+        "/home/zhang/bycode/local/lib/LASlib/libLASlib.a"
         Qt5::Widgets
         glog::glog
         )

@@ -44,10 +44,6 @@ class Data {
   bool hasCloud = false;
   bool hasMesh = false;
 
-  // string filename;             // point cloud file full name
-  // string subname;              // point cloud file short name
-  // string dirname = "E:\\Date\\PointCloud\\";
-
   bool visible = true;
 
   std::shared_ptr<pcl::visualization::PCLVisualizer> viewer;

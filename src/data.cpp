@@ -34,17 +34,16 @@ void Data::init(const QFileInfo& fileInfo,
     supportedModes = {"point", "mesh", "point+mesh"};
   }
   PointT minPoint,maxPoint;
-  if (hasCloud) {
-    cloudId = "cloud-" + fileName;
-    setPointAlpha(255);
-    supportedModes = {"point"};
-    this->featureExtractor.setInputCloud(this->cloud);
-    this->featureExtractor.compute();
-    this->featureExtractor.getAABB(minPoint,maxPoint);
+  // if (hasCloud) {
+  //   cloudId = "cloud-" + fileName;
+  //   setPointAlpha(255);
+  //   supportedModes = {"point"};
+  //   this->featureExtractor.setInputCloud(this->cloud);
+  //   this->featureExtractor.compute();
+  //   this->featureExtractor.getAABB(minPoint,maxPoint);
 
-
-    cloudAABB = AABB(minPoint.x,minPoint.y,minPoint.z,maxPoint.x,maxPoint.y,maxPoint.z);
-  }
+  //   cloudAABB = AABB(minPoint.x,minPoint.y,minPoint.z,maxPoint.x,maxPoint.y,maxPoint.z);
+  // }
 
   // default show node
   curMode = "point";
